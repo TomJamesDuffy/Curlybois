@@ -1,26 +1,31 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from "react";
+import RepositoryInput from "./RepositoryInput/RepositoryInput";
+import Header from "./Header/Header";
+import DisplayPanels from "./DisplayPanels/DisplayPanels";
+import styles from "./App.styles";
+import { createStore, applyMiddleware } from "redux";
+import reducer from "./redux/reducers/reducer";
+import { Provider } from "react-redux";
+import { composeWithDevTools } from "redux-devtools-extension";
+
+const store = createStore(
+  reducer,
+  composeWithDevTools(
+    applyMiddleware()
+    // other store enhancers if any
+  )
+);
 
 class App extends Component {
   render() {
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
-      </div>
+      <Provider store={store}>
+        <div style={styles.page}>
+          <Header />
+          <RepositoryInput />
+          <DisplayPanels reviewCommentsData={["data"]} />
+        </div>
+      </Provider>
     );
   }
 }
