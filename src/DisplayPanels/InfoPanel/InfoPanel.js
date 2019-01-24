@@ -4,8 +4,8 @@ import SimplePieChart from "../../services/charts";
 
 const InfoPanel = ({ pieData, textData, heading }) => {
   console.log(textData);
-  const pieDataExists = pieData && pieData.length > 0;
-  const textDataExists = textData && textData.length > 0;
+  const pieDataExists = pieData?.length > 0;
+  const textDataExists = textData?.length > 0;
   const presentTextList = () => {
     return textData.map((line, index) => {
       return (
