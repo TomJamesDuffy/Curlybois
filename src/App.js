@@ -23,7 +23,7 @@ class App extends Component {
         <div style={styles.page}>
           <Header />
           <RepositoryInput />
-          <DisplayPanels reviewCommentsData={["data"]} />
+          <DisplayPanels />
         </div>
       </Provider>
     );
