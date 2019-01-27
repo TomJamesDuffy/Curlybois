@@ -32,17 +32,21 @@ class RepositoryInput extends Component {
     let prData = [];
     this.props.fetchPullRequestData();
     while (dataOutstanding && !fetchingPullRequests) {
-      const response = await fetch(
-        `${BASE_URL}${owner}/${repository}/pulls?state=all${
-          code ? ACCESS_TOKEN : ""
-        }${code}&per_page=100&page=${pageCounter}`
-      );
-      const responseJson = await response.json();
-      prData = [...prData, ...responseJson];
-      pageCounter += 1;
-      if (responseJson.length === 0) {
-        dataOutstanding = false;
-        this.props.fetchPullRequestDataSuccess(prData);
+      try {
+        const response = await fetch(
+          `${BASE_URL}${owner}/${repository}/pulls?state=all${
+            code ? ACCESS_TOKEN : ""
+          }${code}&per_page=100&page=${pageCounter}`
+        );
+        const responseJson = await response.json();
+        prData = [...prData, ...responseJson];
+        pageCounter += 1;
+        if (responseJson.length === 0) {
+          dataOutstanding = false;
+          this.props.fetchPullRequestDataSuccess(prData);
+        }
+      } catch (err) {
+        console.log('There was an error fetching the pull requests:', err);
       }
     }
   };
