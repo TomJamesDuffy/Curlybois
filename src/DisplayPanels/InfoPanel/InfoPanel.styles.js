@@ -1,6 +1,6 @@
 let styles = {
   panel: {
-    height: 400,
+    minHeight: 400,
     width: 250,
     background: "#dcc9a1",
     margin: 10,
