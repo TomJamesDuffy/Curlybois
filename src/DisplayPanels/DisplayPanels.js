@@ -10,12 +10,12 @@ import {
 } from "../services/helpers";
 
 const DisplayPanels = ({ reviewCommentData }) => {
-  const formattedProportionCommentData = formatContributorsByReviewComments(
+  const { formattedCommentsPerPerson } = formatContributorsByReviewComments(
     reviewCommentData
   );
-  const formattedContributorsBySentimentData = formatContributorsBySentiment(
-    reviewCommentData
-  );
+  const {
+    orderedAverageSentimentPerCommentPerPerson
+  } = formatContributorsBySentiment(reviewCommentData);
   const formattedTopFiveData = formatTopFiveReviewCommentsBySentiment(
     reviewCommentData
   );
@@ -26,12 +26,12 @@ const DisplayPanels = ({ reviewCommentData }) => {
     <div style={styles.panelContainer}>
       <InfoPanel
         heading={"Number of review comments made by each contributor"}
-        pieData={formattedProportionCommentData}
-        textData={formattedProportionCommentData}
+        pieData={formattedCommentsPerPerson}
+        textData={formattedCommentsPerPerson}
       />
       <InfoPanel
         heading={"On a per comment basis, who is the nicest reviewer?"}
-        textData={formattedContributorsBySentimentData}
+        textData={orderedAverageSentimentPerCommentPerPerson}
       />
       <InfoPanel
         heading={"Which review comments were the most positive?"}

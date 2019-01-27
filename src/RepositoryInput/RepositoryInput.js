@@ -15,37 +15,38 @@ const ACCESS_TOKEN = "access_token=";
 class RepositoryInput extends Component {
   state = {
     code: "",
-    owner: "",
-    repository: ""
+    owner: "OurPath",
+    repository: "ourpath-cron"
   };
 
   getData = async () => {
     await this.fetchPullRequests();
-    await this.fetchReviewComments();
+    const comments = await this.fetchReviewComments();
+    await this.formatData(comments);
   };
 
   fetchPullRequests = async () => {
     const { owner, repository, code, fetchingPullRequests } = this.state;
     let dataOutstanding = true;
     let pageCounter = 0;
-    let data = [];
+    let prData = [];
     this.props.fetchPullRequestData();
     while (dataOutstanding && !fetchingPullRequests) {
       const response = await fetch(
         `${BASE_URL}${owner}/${repository}/pulls?state=all&${ACCESS_TOKEN}${code}&per_page=100&page=${pageCounter}`
       );
       const responseJson = await response.json();
-      data = [...data, ...responseJson];
+      prData = [...prData, ...responseJson];
       pageCounter += 1;
       if (responseJson.length === 0) {
         dataOutstanding = false;
-        this.props.fetchPullRequestDataSuccess(data);
+        this.props.fetchPullRequestDataSuccess(prData);
       }
     }
   };
 
   fetchReviewComments = async () => {
-    let data = [];
+    let commentData = [];
     const { code } = this.state;
     const { pullRequestData } = this.props;
     this.props.fetchReviewCommentData();
@@ -54,7 +55,15 @@ class RepositoryInput extends Component {
         `${pullRequestData[n].review_comments_url}?${ACCESS_TOKEN}${code}`
       );
       const responseJson = await response.json();
-      data = [...data, ...responseJson];
+      commentData = [...commentData, ...responseJson];
+    }
+    return commentData;
+  };
+
+  formatData = async data => {
+    const regex = /```(.?)*```/s;
+    for (const comment of data) {
+      comment.body = comment.body.replace(regex, "");
     }
     this.props.fetchReviewCommentDataSuccess(data);
   };
@@ -72,7 +81,8 @@ class RepositoryInput extends Component {
   };
 
   render() {
-    const { fetchingPullRequests, fetchingComments } = this.props;
+    const { fetchingPullRequestData, fetchingReviewCommentData } = this.props;
+
     return (
       <div style={styles.inputForm}>
         <p>OAuthCode</p>
@@ -100,15 +110,17 @@ class RepositoryInput extends Component {
           {" "}
           yes yes mandem, is it true that your dog has one leg?
         </button>
-        {fetchingPullRequests && <p> Fetching pull requests...</p>}
-        {fetchingComments && <p> Fetching comments...</p>}
+        {fetchingPullRequestData && <p> Fetching pull requests...</p>}
+        {fetchingReviewCommentData && <p> Fetching comments...</p>}
       </div>
     );
   }
 }
 
 const mapStateToProps = state => ({
-  pullRequestData: state.pullRequestData
+  pullRequestData: state.pullRequestData,
+  fetchingPullRequestData: state.fetchingPullRequestData,
+  fetchingReviewCommentData: state.fetchingPullRequestData
 });
 
 const mapDispatchToProps = {
