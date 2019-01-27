@@ -1,3 +1,3 @@
 ### `yarn start`
 
-![Screenshot](./src/assets/screenshot.png "Screenshot")
+![Screenshot](src/assets/screenshot.png "Screenshot")
