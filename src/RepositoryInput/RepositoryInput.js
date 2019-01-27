@@ -10,13 +10,13 @@ import {
 const fetch = require("isomorphic-fetch");
 
 const BASE_URL = "https://api.github.com/repos/";
-const ACCESS_TOKEN = "access_token=";
+const ACCESS_TOKEN = "&access_token=";
 
 class RepositoryInput extends Component {
   state = {
-    code: "",
-    owner: "OurPath",
-    repository: "ourpath-cron"
+    code: "06c768970a378521f36d43bdacf04e95be832480",
+    owner: "newsuk",
+    repository: "AyeSpy"
   };
 
   getData = async () => {
@@ -33,7 +33,9 @@ class RepositoryInput extends Component {
     this.props.fetchPullRequestData();
     while (dataOutstanding && !fetchingPullRequests) {
       const response = await fetch(
-        `${BASE_URL}${owner}/${repository}/pulls?state=all&${ACCESS_TOKEN}${code}&per_page=100&page=${pageCounter}`
+        `${BASE_URL}${owner}/${repository}/pulls?state=all${
+          code ? ACCESS_TOKEN : ""
+        }${code}&per_page=100&page=${pageCounter}`
       );
       const responseJson = await response.json();
       prData = [...prData, ...responseJson];
