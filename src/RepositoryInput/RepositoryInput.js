@@ -14,7 +14,7 @@ const ACCESS_TOKEN = "&access_token=";
 
 class RepositoryInput extends Component {
   state = {
-    code: "06c768970a378521f36d43bdacf04e95be832480",
+    code: "",
     owner: "newsuk",
     repository: "AyeSpy"
   };
