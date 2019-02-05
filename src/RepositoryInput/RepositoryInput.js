@@ -32,17 +32,21 @@ class RepositoryInput extends Component {
     let prData = [];
     this.props.fetchPullRequestData();
     while (dataOutstanding && !fetchingPullRequests) {
-      const response = await fetch(
-        `${BASE_URL}${owner}/${repository}/pulls?state=all${
-          code ? ACCESS_TOKEN : ""
-        }${code}&per_page=100&page=${pageCounter}`
-      );
-      const responseJson = await response.json();
-      prData = [...prData, ...responseJson];
-      pageCounter += 1;
-      if (responseJson.length === 0) {
-        dataOutstanding = false;
-        this.props.fetchPullRequestDataSuccess(prData);
+      try {
+        const response = await fetch(
+          `${BASE_URL}${owner}/${repository}/pulls?state=all${
+            code ? ACCESS_TOKEN : ""
+          }${code}&per_page=100&page=${pageCounter}`
+        );
+        const responseJson = await response.json();
+        prData = [...prData, ...responseJson];
+        pageCounter += 1;
+        if (responseJson.length === 0) {
+          dataOutstanding = false;
+          this.props.fetchPullRequestDataSuccess(prData);
+        }
+      } catch (err) {
+        console.log('There was an error fetching the pull requests:', err);
       }
     }
   };
@@ -84,7 +88,7 @@ class RepositoryInput extends Component {
 
   render() {
     const { fetchingPullRequestData, fetchingReviewCommentData } = this.props;
-
+    const { owner, code } = this.state;
     return (
       <div style={styles.inputForm}>
         <p>OAuthCode</p>
@@ -108,7 +112,11 @@ class RepositoryInput extends Component {
           value={this.state.repository}
           onChange={this.handleRepositoryChange}
         />
-        <button type="submit" onClick={this.getData}>
+        <button
+          type="submit"
+          onClick={this.getData}
+          disabled={owner === '' || code === ''}
+        >
           {" "}
           yes yes mandem, is it true that your dog has one leg?
         </button>
