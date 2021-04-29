@@ -2,7 +2,7 @@ import React from "react";
 
 const Header = () => (
   <div>
-    <h1 className="heading">{"{urlybois"}</h1>
+    <h1 className="heading">{"{urlyboiz"}</h1>
   </div>
 );
 
